@@ -21,18 +21,18 @@ import { supabase } from '@/lib/supabase'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import {
-  ArrowRight,
   Calendar,
   Clock,
   Filter,
   Loader2,
   MapPin,
-  Search,
+  Search
 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
 // Import standalone components
+import InteractiveVirtualGallery from './exhibit-3d-virtual-gallery'
 import MuseumMap from './exhibits-map'
 import ExhibitDetailModal, { ExhibitDetailProps } from './exhibits-modal'
 import FeaturedCuratorsSection from './feature-curator-sections'
@@ -41,60 +41,60 @@ import HeroSection from './hero-exhibits'
 
 // Define types for Exhibit
 
-type VirtualGalleryProps = {
-  title?: string
-  subtitle?: string
-  description?: string
-  onLaunch?: () => void
-}
+// type VirtualGalleryProps = {
+//   title?: string
+//   subtitle?: string
+//   description?: string
+//   onLaunch?: () => void
+// }
 
-const InteractiveVirtualGallery = ({
-  title = "360° Virtual Gallery Preview",
-  subtitle = "Interactive Experience",
-  description = "Get a taste of our exhibitions with this interactive preview. Click and drag to look around.",
-  onLaunch = () => console.log('Launch experience')
-}: VirtualGalleryProps) => {
-  return (
-    <div className="py-24 bg-gradient-to-b from-white to-gray-100">
-      <div className="container mx-auto px-4">
-        <div className="mb-12 text-center">
-          <Eyebrow label={subtitle} />
-          <h2 className="text-4xl font-display font-bold text-[#492309] mt-2 mb-4">
-            {title}
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            {description}
-          </p>
-        </div>
+// const InteractiveVirtualGallery = ({
+//   title = "360° Virtual Gallery Preview",
+//   subtitle = "Interactive Experience",
+//   description = "Get a taste of our exhibitions with this interactive preview. Click and drag to look around.",
+//   onLaunch = () => console.log('Launch experience')
+// }: VirtualGalleryProps) => {
+//   return (
+//     <div className="py-24 bg-gradient-to-b from-white to-gray-100">
+//       <div className="container mx-auto px-4">
+//         <div className="mb-12 text-center">
+//           <Eyebrow label={subtitle} />
+//           <h2 className="text-4xl font-display font-bold text-[#492309] mt-2 mb-4">
+//             {title}
+//           </h2>
+//           <p className="text-gray-600 max-w-2xl mx-auto">
+//             {description}
+//           </p>
+//         </div>
 
-        <div className="relative bg-white shadow-xl rounded-xl overflow-hidden aspect-video max-w-5xl mx-auto">
-          {/* Placeholder for 360 viewer - this would be implemented with a proper 360 viewer library */}
-          <div className="absolute inset-0 bg-gray-200">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                  >
-                    <ArrowRight className="h-8 w-8 text-[#492309]" />
-                  </motion.div>
-                </div>
-                <p className="text-gray-700 font-medium">360° Preview Available</p>
-                <Button 
-                  className="mt-4 bg-[#492309]"
-                  onClick={onLaunch}
-                >
-                  Launch Experience
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
+//         <div className="relative bg-white shadow-xl rounded-xl overflow-hidden aspect-video max-w-5xl mx-auto">
+//           {/* Placeholder for 360 viewer - this would be implemented with a proper 360 viewer library */}
+//           <div className="absolute inset-0 bg-gray-200">
+//             <div className="absolute inset-0 flex items-center justify-center">
+//               <div className="text-center">
+//                 <div className="w-16 h-16 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
+//                   <motion.div
+//                     animate={{ rotate: 360 }}
+//                     transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+//                   >
+//                     <ArrowRight className="h-8 w-8 text-[#492309]" />
+//                   </motion.div>
+//                 </div>
+//                 <p className="text-gray-700 font-medium">360° Preview Available</p>
+//                 <Button 
+//                   className="mt-4 bg-[#492309]"
+//                   onClick={onLaunch}
+//                 >
+//                   Launch Experience
+//                 </Button>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
 
 type Exhibit = ExhibitDetailProps
 
@@ -161,10 +161,10 @@ const ExhibitsPage = () => {
   ]
   
   // Event handlers
-  const handleLaunchExperience = () => {
-    toast.info('Launching 360° virtual gallery experience...')
-    // Implementation would go here
-  }
+  // const handleLaunchExperience = () => {
+  //   toast.info('Launching 360° virtual gallery experience...')
+  //   // Implementation would go here
+  // }
 
   const handleViewFullMap = () => {
     toast.info('Opening full interactive map...')
@@ -240,8 +240,8 @@ const ExhibitsPage = () => {
       />
 
       {/* Interactive 3D Exhibition Showcase - using standalone component */}
-      <InteractiveVirtualGallery 
-        onLaunch={handleLaunchExperience}
+      <InteractiveVirtualGallery
+        // onLaunch={handleLaunchExperience}
       />
 
       {/* All Exhibits Grid with Masonry Layout */}

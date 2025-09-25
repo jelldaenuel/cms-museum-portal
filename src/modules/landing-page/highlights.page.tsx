@@ -20,7 +20,7 @@ const Highlights = () => {
             <EventItem
               date="September 2, 2013"
               key={"2"}
-              icon={"/mock/high1.jpeg"}
+              icon={"/highlight_1.jpeg"}
               title={"THE BLANCO FAMILY ART MUSEUM"}
               description={"The museum houses the vast collection of artwork produced by the Blanco family of painters."}
             />
@@ -40,14 +40,14 @@ const Highlights = () => {
             <EventItem
               date="September 2, 2013"
               key={"2"}
-              icon={"/mock/high2.jpeg"}
+              icon={"/highlight_2.jpeg"}
               title={"THE BOTONG FRANCISCO MUSEUM AND STREET MURALS"}
               description={"TThe Botong Francisco Museum & Street Murals is just 10 minutes away from Blanco Art Family Museum. "}
             />
             <EventItem
               key={"2"}
               date="September 2, 2013"
-              icon={"/mock/high3.jpg"}
+              icon={"/highlight_3.jpeg"}
               title={"NEMIRANDA ART HOUSE"}
               description={"A collection of famous artist ( Nemesio “Nemi” R. Miranda Jr.) paintings masterfully employing figurative realism in his artworks, portraying rural life and folkloric art on display."}
             />

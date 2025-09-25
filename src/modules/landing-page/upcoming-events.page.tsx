@@ -1,7 +1,57 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import EventItem from "@/components/event-item"
 import Eyebrow from "@/components/eyebrow"
+import supabase from "@/lib/supabase"
+import { useQuery } from "@tanstack/react-query"
+
+interface Event {
+  id: string
+  title: string
+  description: string
+  eventDate: string
+  icon?: string
+  // Add other event properties as needed
+}
 
 const UpcomingEvents = () => {
+
+    const { data: events, isLoading, error } = useQuery<Event[]>({
+      queryKey: ['events'],
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from('events')
+          .select('*')
+          .order('eventDate', { ascending: true })
+          .limit(3) // Limit to 3 latest events
+        
+        if (error) {
+          throw new Error(error.message)
+        }
+        return data || []
+      },
+    })
+
+    if (isLoading) {
+      return (
+        <div className="container mx-auto">
+          <div className="flex flex-col md:gap-20 gap-10 lg:py-20 md:py-16 py-12 px-5">
+            <div className="text-center">Loading events...</div>
+          </div>
+        </div>
+      )
+    }
+
+    if (error) {
+      return (
+        <div className="container mx-auto">
+          <div className="flex flex-col md:gap-20 gap-10 lg:py-20 md:py-16 py-12 px-5">
+            <div className="text-center text-red-500">Error loading events</div>
+          </div>
+        </div>
+      )
+    }
+  
+    
   return (
     <div>
       <div className="container mx-auto">
@@ -10,43 +60,26 @@ const UpcomingEvents = () => {
             <div className="lg:col-span-8">
               <Eyebrow label="Upcoming Events" />
               <h2 className="font-display md:text-display-xl text-display-md pt-5 text-[#492309]">
-                {/* We <span className="bg-[#50C878]/85">tailored</span> the{" "}
-                <span className="italic">services empower navigating</span> on
-                computer engineering in{" "}
-                <span className="underline">URS Morong</span> */}
                 What's On in Rizal: Upcoming <span className="bg-[#927B6B]/95 text-gray-300 italic px-2">Museum Events</span>.
               </h2>
             </div>
           </div>
           <div className="flex lg:flex-row flex-col gap-8">
-            <EventItem
-              date="April 03, 2002"
-              icon={"/mock/hinge.png"}
-              title="Higantes Festival"
-              description="A vibrant celebration featuring giant papier-mâché figures, symbolizing the town's agrarian past."
-            />
-            <EventItem
-              icon={"/mock/hinge.png"}
-              date="April 03, 2002"
-              title="Higantes Festival"
-              description="A vibrant celebration featuring giant papier-mâché figures, symbolizing the town's agrarian past."
-            />
-            <EventItem
-              icon={"/mock/hinge.png"}
-              date="April 03, 2002"
-              title="Higantes Festival"
-              description="A vibrant celebration featuring giant papier-mâché figures, symbolizing the town's agrarian past."
-            />
-                      {/*   <ServiceItem
-              icon={"RenovationIcon"}
-              title="Resource Accessability"
-              description="Research reports, case studies, and tools for informed decisions"
-            />
-            <ServiceItem
-              icon={"ConstructionIcon"}
-              title="Networking Events and Conferences"
-              description="Conferences, meetups, and online communities fostering industry connections"
-            /> */}
+            {events && events.length > 0 ? (
+              events.map((event) => (
+                <EventItem
+                  key={event.id}
+                  date={event.eventDate}
+                  icon={(event as any).coverPhoto || "/mock/hinge.png"} // Fallback to default icon
+                  title={event.title}
+                  description={event.description}
+                />
+              ))
+            ) : (
+              <div className="text-center w-full">
+                <p className="text-gray-500">No upcoming events available.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
