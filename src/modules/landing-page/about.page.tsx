@@ -15,8 +15,8 @@ const About = () => {
           Dedicated to preserving and celebrating Rizal Province’s rich heritage, we connect you to its museums, where history, art, and innovation come together to tell the stories of the past and inspire the future.
           </p>
 
-          <div className="flex justify-left items-left">
-            {/* <Button
+          {/*<div className="flex justify-left items-left">
+             <Button
               variant={"linkHover2"}
               className="text-[#50C878] font-bold"
             >
@@ -24,8 +24,8 @@ const About = () => {
               <span>
                 <ArrowRightIcon className="ml-1" />
               </span>
-            </Button> */}
-          </div>
+            </Button>
+          </div> */}
         </div>
         <div className="lg:col-span-6 flex flex-col gap-8 relative">
           <img src={"/mock/mus2.png"} alt="Award Badge" />
