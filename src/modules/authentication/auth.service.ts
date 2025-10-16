@@ -42,9 +42,9 @@ export default {
     }
   },
   
-  registerVisitor: async (payload: any) => {
-    try {
-      const formData = new FormData();
+ registerVisitor: async (payload: any) => {
+  try {
+    const formData = new FormData();
     Object.entries(payload).forEach(([key, value]) => {
       if (key === 'visitorImg' && value instanceof File) {
         formData.append('visitorImg', value);
@@ -53,7 +53,7 @@ export default {
       }
     });
 
-    // Log the FormData contents
+    console.log("FormData payload:");
     for (const [key, value] of formData.entries()) {
       console.log(key, value);
     }
@@ -62,20 +62,16 @@ export default {
       method: "POST",
       url: `${import.meta.env.VITE_SERVER_URL}/api/v1/visitor/register_visitor`,
       data: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
 
-    return response.data
+    return response.data; // ✅ siguradong may return
 
-    } catch (err) {
-      if (err instanceof axios.AxiosError) {
-        console.log(err.response?.data.error);
-        throw new Error(`${err.response?.data.error}`);
-      }
-    }
-  },
+  } catch (err: any) {
+    console.error("Register visitor error:", err?.response?.data || err);
+    throw new Error(err?.response?.data?.error || "Registration failed");
+  }
+},
 
   
   /**-------------------------------------------------- */
