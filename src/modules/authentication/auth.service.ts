@@ -3,6 +3,16 @@ import supabase from "@/lib/supabase";
 import axios from "axios";
 import IAuthClient from "./auth.interface";
 
+// Interface for visitor registration
+interface RegisterVisitorPayload {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  userRole: string;
+  visitorImg?: File;
+}
+
 export default {
   /**-------------------------------------------------- */
   // Login User                                         |
@@ -42,53 +52,60 @@ export default {
     }
   },
   
-  registerVisitor: async (payload: any) => {
-    try {
-      const formData = new FormData();
+  /**-------------------------------------------------- */
+  // Register Visitor                                   |
+  /**-------------------------------------------------- */
+  registerVisitor: async (payload: RegisterVisitorPayload) => {
+    const formData = new FormData();
+    
     Object.entries(payload).forEach(([key, value]) => {
       if (key === 'visitorImg' && value instanceof File) {
         formData.append('visitorImg', value);
-      } else if (value !== undefined) {
-        formData.append(key, value!.toString());
+      } else if (value !== undefined && value !== null) {
+        formData.append(key, value.toString());
       }
     });
 
-    // Log the FormData contents
+    // Log the FormData contents (for debugging)
+    console.log('FormData contents:');
     for (const [key, value] of formData.entries()) {
       console.log(key, value);
     }
 
-    const response = await axios({
-      method: "POST",
-      url: `${import.meta.env.VITE_SERVER_URL}/api/v1/visitor/register_visitor`,
-      data: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${import.meta.env.VITE_SERVER_URL}/api/v1/visitor/register_visitor`,
+        data: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
-    return response.data
+      return response.data;
 
     } catch (err) {
       if (err instanceof axios.AxiosError) {
-        console.log(err.response?.data.error);
-        throw new Error(`${err.response?.data.error}`);
+        const errorMessage = err.response?.data?.error || err.response?.data?.message || 'Registration failed';
+        console.error('Registration error:', errorMessage);
+        throw new Error(errorMessage);
       }
+      // IMPORTANTE: I-throw ang error para ma-catch ng React Query
+      console.error('Unexpected registration error:', err);
+      throw new Error('An unexpected error occurred during registration');
     }
   },
 
-  
   /**-------------------------------------------------- */
-  // Current User                                         |
+  // Current User                                       |
   /**-------------------------------------------------- */
   currentUserHandler: async () => {
     try {
+      const { data: session } = await supabase.auth.getSession();
 
-    const { data: session } = await supabase.auth.getSession();
+      if (!session.session) return null;
 
-    if (!session.session) return null;
-
-     const { data: { user }, error } = await supabase.auth.getUser();
+      const { data: { user }, error } = await supabase.auth.getUser();
 
       if (error) {
         console.error('Error fetching current user:', error.message);
@@ -102,24 +119,28 @@ export default {
         console.log(err.response?.data.error);
         throw new Error(`${err.response?.data.error}`);
       }
+      // I-throw ang error
+      throw err;
     }
   },
 
   /**-------------------------------------------------- */
-  // Logout Current User                                         |
+  // Logout Current User                                |
   /**-------------------------------------------------- */
   logoutUserHandler: async () => {
     try {
-
-     const { error } = await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
       
-      if(error) throw `${JSON.stringify(error,  null, 2)}`
+      if (error) {
+        throw new Error(JSON.stringify(error, null, 2));
+      }
     } catch (err) {
       if (err instanceof axios.AxiosError) {
         console.log(err.response?.data.error);
         throw new Error(`${err.response?.data.error}`);
       }
+      // I-throw ang error
+      throw err;
     }
   },
-   
 }
