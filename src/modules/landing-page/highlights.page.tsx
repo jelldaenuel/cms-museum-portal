@@ -53,14 +53,14 @@ const Highlights = () => {
             />
           </div>
         </div>
-        <div className="xl:hidden flex items-start">
+         {/* <div className="xl:hidden flex items-start">
           <Button variant={"linkHover1"} className="text-[#0B0400] font-bold">
             Read more
             <span>
               <ArrowRightIcon className="ml-1" />
             </span>
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   )
