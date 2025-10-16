@@ -6,21 +6,18 @@ import authService from "./auth.service";
 export default function useRegisterVisitor() {
   const queryClient = useQueryClient();
 
-  const { isPending: isAddingVisitor, mutateAsync: registerVisitorHandler } = useMutation({
+  const { isLoading: isAddingVisitor, mutateAsync: registerVisitorHandler } = useMutation({
     mutationFn: authService.registerVisitor,
-    onSuccess: (_newArr, data) => {
+    onSuccess: (responseData, variables) => {
       toast.success(
-        `Success! The ${(data).email} has been created successfully. `
+        `Success! The visitor has been created successfully.`
       );
       queryClient.invalidateQueries({
-        queryKey: [CMS_KEYZ.REGISTER_VISITOR
-        ],
+        queryKey: [CMS_KEYZ.REGISTER_VISITOR],
       });
     },
-    onError: (err) => toast.error(err.message),
+    onError: (err: any) => toast.error(err.message || "Registration failed"),
+  });
 
-  }) 
-
-  return { isAddingVisitor, registerVisitorHandler}
-
+  return { isAddingVisitor, registerVisitorHandler };
 }
