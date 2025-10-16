@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -40,6 +40,8 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [success, setSuccess] = useState<string | null>(null);
+  const [showVerificationMessage, setShowVerificationMessage] = useState(false);
+  const [userEmail, setUserEmail] = useState<string>("");
   
   // Get the register mutation from our custom hook
   const { isAddingVisitor, registerVisitorHandler } = useRegisterVisitor();
@@ -71,26 +73,109 @@ const RegisterPage: React.FC = () => {
         lastName: registrationData.lastName,
         email: registrationData.email,
         password: registrationData.password,
-        // Add any other required fields for your API
         userRole: 'visitor',
       });
       
-      // Show success message
-      setSuccess("Registration submitted successfully! Your account is pending approval. You will receive an email once approved.");
+      // Store email for display
+      setUserEmail(registrationData.email);
+      
+      // Show verification message
+      setShowVerificationMessage(true);
+      setSuccess("Registration successful! Please check your email to verify your account.");
       
       // Reset the form
       reset();
       
-      // Redirect to login page after a delay
-      setTimeout(() => {
-        navigate("/login");
-      }, 5000);
     } catch (error) {
       // Error handling is done in the useRegisterVisitor hook
-      // It will display toasts for errors
       console.error("Registration error:", error);
     }
   };
+
+  // If verification message is shown, display the email verification screen
+  if (showVerificationMessage) {
+    return (
+      <div className="container relative h-screen flex flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0 overflow-hidden">
+        <div className="flex space-x-2 absolute right-2 top-2">
+          <Button
+            onClick={() => navigate("/home")}
+            variant={"expandIcon"}
+            iconPlacement="left"
+            Icon={ArrowLeftIcon}
+            className="bg-[#0B0400]"
+          >
+            Back home
+          </Button>
+        </div>
+        
+        <div className="relative hidden h-full flex-col bg-muted text-white lg:flex dark:border-r">
+          <img src="/mock/login.jpg" className="h-screen w-screen md:none" alt="Registration background" />
+        </div>
+        
+        <div className="lg:p-8">
+          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px]">
+            <div className="flex flex-col items-center space-y-4 text-center">
+              <div className="rounded-full bg-green-100 p-6">
+                <Mail className="h-12 w-12 text-green-600" />
+              </div>
+              
+              <h1 className="text-2xl font-semibold tracking-tight">Verify Your Email</h1>
+              
+              <Alert className="bg-blue-50 border-blue-500">
+                <AlertDescription className="text-sm text-gray-700">
+                  We've sent a verification link to <strong>{userEmail}</strong>. 
+                  Please check your inbox and click the verification link to activate your account.
+                </AlertDescription>
+              </Alert>
+              
+              <div className="w-full space-y-3 pt-4">
+                <p className="text-sm text-muted-foreground">
+                  Didn't receive the email? Check your spam folder or try the following:
+                </p>
+                
+                <ul className="text-sm text-muted-foreground text-left space-y-2 list-disc list-inside">
+                  <li>Wait a few minutes for the email to arrive</li>
+                  <li>Check your spam or junk folder</li>
+                  <li>Make sure you entered the correct email address</li>
+                </ul>
+                
+                <div className="flex flex-col gap-2 pt-4">
+                  <Button 
+                    onClick={() => navigate("/login")}
+                    variant={"default"}
+                    className="bg-[#0B0400] w-full"
+                  >
+                    Go to Login
+                  </Button>
+                  
+                  <Button 
+                    onClick={() => {
+                      setShowVerificationMessage(false);
+                      setSuccess(null);
+                    }}
+                    variant={"outline"}
+                    className="w-full"
+                  >
+                    Register Another Account
+                  </Button>
+                </div>
+              </div>
+            </div>
+            
+            <p className="px-8 text-center text-sm text-muted-foreground">
+              Need help? Contact our{" "}
+              <Link
+                to="/support"
+                className="underline underline-offset-4 hover:text-primary"
+              >
+                support team
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container relative h-screen flex flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0 overflow-hidden">
@@ -120,7 +205,7 @@ const RegisterPage: React.FC = () => {
           </div>
           
           {/* Success message */}
-          {success && (
+          {success && !showVerificationMessage && (
             <Alert className="bg-green-50 border-green-500 text-green-800">
               <AlertTitle>Success</AlertTitle>
               <AlertDescription>{success}</AlertDescription>
@@ -172,6 +257,9 @@ const RegisterPage: React.FC = () => {
                 {errors.email && (
                   <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
                 )}
+                <p className="text-xs text-muted-foreground mt-1">
+                  A verification link will be sent to this email
+                </p>
               </div>
               
               <div className="grid gap-1">
