@@ -545,46 +545,6 @@ const VisitorExperiencePage = () => {
   )
 }
 
-// Updated PostCard Component with TypeScript ImageCarousel
-interface PostCardProps {
-  post: Post
-  onLike?: () => void
-}
-
-const PostCard = ({ post, onLike }: PostCardProps) => {
-  return (
-    <Card className="overflow-hidden">
-      <CardHeader className="flex flex-row items-center gap-4 p-4">
-        <Avatar>
-          <AvatarImage src={post?.visitorImg || "/placeholder.svg?height=40&width=40"} alt={post?.firstName} />
-          <AvatarFallback>{post?.firstName?.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div className="grid gap-1">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold">{post?.firstName}</span>
-            <span className="text-xs text-muted-foreground">@{post?.lastName}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">{post.created_at}</span>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="p-0">
-        {post.content && (
-          <div className="px-4 pb-4">
-            <p className="text-sm">{post.content}</p>
-          </div>
-        )}
-        
-        {/* Instagram-style image carousel */}
-        {post.images && post.images.length > 0 && (
-          <div className="w-full">
-            <ImageCarousel 
-              images={post.images} 
-              aspectRatio="square"
-              height="h-80"
-            />
-          </div>
         )}
         
       </CardContent>
@@ -594,10 +554,12 @@ const PostCard = ({ post, onLike }: PostCardProps) => {
             variant="ghost" 
             size="sm" 
             className="gap-1"
-            onClick={onLike}
+            onClick={onLike}  // Ito ay magse-execute ng mutation
           >
-            <Heart className="h-4 w-4" />
-            <span>{post.likes}</span>
+            <Heart 
+              className={`h-4 w-4 ${isLiked ? 'text-red-500' : 'text-gray-500'}`}  // Dynamic color
+            />
+            <span>{post.likes}</span>  {/* Ang count ay hindi agad na-update dito, pero magre-refresh pagkatapos ng mutation */}
           </Button>
           <Button variant="ghost" size="sm" className="gap-1">
             <MessageCircle className="h-4 w-4" />
@@ -608,5 +570,4 @@ const PostCard = ({ post, onLike }: PostCardProps) => {
     </Card>
   )
 }
-
 export default VisitorExperiencePage
