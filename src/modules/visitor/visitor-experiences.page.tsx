@@ -545,13 +545,18 @@ const VisitorExperiencePage = () => {
   )
 }
 
-// Updated PostCard Component with TypeScript ImageCarousel
+// Updated PostCard Component (UI toggle only, no like count increment)
 interface PostCardProps {
   post: Post
-  onLike?: () => void
 }
 
-const PostCard = ({ post, onLike }: PostCardProps) => {
+const PostCard = ({ post }: PostCardProps) => {
+  const [isLiked, setIsLiked] = useState(false)
+
+  const handleLikeToggle = () => {
+    setIsLiked((prev) => !prev)
+  }
+
   return (
     <Card className="overflow-hidden">
       <CardHeader className="flex flex-row items-center gap-4 p-4">
@@ -564,41 +569,40 @@ const PostCard = ({ post, onLike }: PostCardProps) => {
             <span className="font-semibold">{post?.firstName}</span>
             <span className="text-xs text-muted-foreground">@{post?.lastName}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">{post.created_at}</span>
-          </div>
+          <span className="text-xs text-muted-foreground">{post.created_at}</span>
         </div>
       </CardHeader>
+
       <CardContent className="p-0">
         {post.content && (
           <div className="px-4 pb-4">
             <p className="text-sm">{post.content}</p>
           </div>
         )}
-        
-        {/* Instagram-style image carousel */}
+
         {post.images && post.images.length > 0 && (
           <div className="w-full">
-            <ImageCarousel 
-              images={post.images} 
+            <ImageCarousel
+              images={post.images}
               aspectRatio="square"
               height="h-80"
             />
           </div>
         )}
-        
       </CardContent>
+
       <CardFooter className="p-4">
         <div className="flex items-center gap-6 w-full">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="gap-1"
-            onClick={onLike}
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`gap-1 ${isLiked ? "text-red-500" : "text-muted-foreground"}`}
+            onClick={handleLikeToggle}
           >
-            <Heart className="h-4 w-4" />
-            <span>{post.likes}</span>
+            <Heart className={`h-4 w-4 ${isLiked ? "fill-red-500 text-red-500" : ""}`} />
+            {/* No count increment — static display only */}
           </Button>
+
           <Button variant="ghost" size="sm" className="gap-1">
             <MessageCircle className="h-4 w-4" />
             <span>{post.comments}</span>
@@ -608,5 +612,6 @@ const PostCard = ({ post, onLike }: PostCardProps) => {
     </Card>
   )
 }
+
 
 export default VisitorExperiencePage
