@@ -14,25 +14,24 @@ interface Post {
   content: string
   images: string[]
   created_at: string
+  comments?: number
 }
 
 interface PostCardProps {
   post: Post
-  onLike?: () => void // Optional callback kung gusto mong mag-trigger ng action
+  onLike?: () => void // ✅ optional callback
 }
 
 const PostCard = ({ post, onLike }: PostCardProps) => {
-  // State para sa visual like effect (pulang heart lang, walang count)
   const [liked, setLiked] = useState(false)
 
   const handleLikeClick = () => {
-    setLiked(!liked) // Toggle visual like
-    if (onLike) onLike() // Optional callback
+    setLiked(!liked)
+    if (onLike) onLike()
   }
 
   return (
     <Card className="overflow-hidden">
-      {/* Header */}
       <CardHeader className="flex flex-row items-center gap-4 p-4">
         <Avatar>
           <AvatarImage
@@ -50,30 +49,19 @@ const PostCard = ({ post, onLike }: PostCardProps) => {
         </div>
       </CardHeader>
 
-      {/* Content */}
       <CardContent className="p-0">
         {post.content && (
           <div className="px-4 pb-4">
             <p className="text-sm">{post.content}</p>
           </div>
         )}
-
-        {/* Image Carousel */}
-        {post.images && post.images.length > 0 && (
-          <div className="w-full">
-            <ImageCarousel
-              images={post.images}
-              aspectRatio="square"
-              height="h-80"
-            />
-          </div>
+        {post.images?.length > 0 && (
+          <ImageCarousel images={post.images} aspectRatio="square" height="h-80" />
         )}
       </CardContent>
 
-      {/* Footer */}
       <CardFooter className="p-4">
         <div className="flex items-center gap-6 w-full">
-          {/* Like button (no count) */}
           <Button
             variant="ghost"
             size="sm"
@@ -89,13 +77,9 @@ const PostCard = ({ post, onLike }: PostCardProps) => {
             />
           </Button>
 
-          {/* Comment button (placeholder lang) */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="gap-1 text-muted-foreground"
-          >
+          <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground">
             <MessageCircle className="h-5 w-5" />
+            <span>{post.comments || 0}</span>
           </Button>
         </div>
       </CardFooter>
