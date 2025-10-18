@@ -18,21 +18,16 @@ interface Post {
 
 interface PostCardProps {
   post: Post
-  onLike?: () => void // ✅ added optional onLike prop
+  onLike?: () => void // Optional callback kung gusto mong mag-trigger ng action
 }
 
 const PostCard = ({ post, onLike }: PostCardProps) => {
-  // State para sa visual like effect (red heart)
+  // State para sa visual like effect (pulang heart lang, walang count)
   const [liked, setLiked] = useState(false)
 
   const handleLikeClick = () => {
-    // Visual effect lang
-    setLiked(!liked)
-
-    // Trigger callback kung meron
-    if (onLike) {
-      onLike()
-    }
+    setLiked(!liked) // Toggle visual like
+    if (onLike) onLike() // Optional callback
   }
 
   return (
@@ -78,14 +73,14 @@ const PostCard = ({ post, onLike }: PostCardProps) => {
       {/* Footer */}
       <CardFooter className="p-4">
         <div className="flex items-center gap-6 w-full">
-          {/* Like button */}
+          {/* Like button (no count) */}
           <Button
             variant="ghost"
             size="sm"
             className={`gap-1 transition-colors ${
               liked ? "text-red-500" : "text-muted-foreground"
             }`}
-            onClick={handleLikeClick} // ✅ now calls both visual and parent callback
+            onClick={handleLikeClick}
           >
             <Heart
               className={`h-5 w-5 transition-colors ${
@@ -94,5 +89,18 @@ const PostCard = ({ post, onLike }: PostCardProps) => {
             />
           </Button>
 
-          {/* Comment button (optional, no function yet) */}
-          <Button variant="ghost" size="sm" className="gap-1 text-muted-foregrou
+          {/* Comment button (placeholder lang) */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1 text-muted-foreground"
+          >
+            <MessageCircle className="h-5 w-5" />
+          </Button>
+        </div>
+      </CardFooter>
+    </Card>
+  )
+}
+
+export default PostCard
