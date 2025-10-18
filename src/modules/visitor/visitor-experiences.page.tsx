@@ -14,8 +14,8 @@ import { toast } from "sonner"
 import { v4 as uuidv4 } from "uuid"
 import useCurrentUser from "../authentication/useCurrentUser"
 
-// Import the ImageCarousel component
 import ImageCarousel from "./visitor-experience-carousel"
+import PostCard from "@/components/ui/postcard"
 
 interface Post {
   post_id: string
