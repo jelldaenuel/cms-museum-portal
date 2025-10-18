@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Heart, MessageCircle } from "lucide-react"
-import ImageCarousel from "./visitor-experience-carousel"
+import ImageCarousel from "./modules/visitor/visitor-experience-carousel"
 
 interface Post {
   post_id: string
